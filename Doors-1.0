@@ -1,0 +1,161 @@
+--BY ROBANIK DOORS🎃 1.0
+
+-- Создание экрана GUI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Создание кнопки для открытия меню
+local MenuButton = Instance.new("TextButton")
+MenuButton.Parent = ScreenGui
+MenuButton.Text = "Menu"
+MenuButton.Size = UDim2.new(0, 60, 0, 60)
+MenuButton.Position = UDim2.new(0, 10, 0, 10)
+MenuButton.BackgroundColor3 = Color3.new(0, 0, 0)
+MenuButton.TextColor3 = Color3.new(1, 1, 1)
+MenuButton.BorderSizePixel = 0
+
+-- Создание кадра для меню
+local MenuFrame = Instance.new("Frame")
+MenuFrame.Parent = ScreenGui
+MenuFrame.Size = UDim2.new(0, 400, 0, 300) -- Увеличено место для кнопки увеличения скорости
+MenuFrame.Position = UDim2.new(0.5, -200, 0.5, -150)
+MenuFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+MenuFrame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+MenuFrame.BorderSizePixel = 0
+MenuFrame.Visible = false -- Изначально меню скрыто
+
+-- Создание кнопок для функций ESP
+local espDoorsButton = Instance.new("TextButton")
+espDoorsButton.Parent = MenuFrame
+espDoorsButton.Text = "Esp doors"
+espDoorsButton.Size = UDim2.new(1, -20, 0, 50)
+espDoorsButton.Position = UDim2.new(0, 10, 0, 10)
+espDoorsButton.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+espDoorsButton.TextColor3 = Color3.new(1, 1, 1)
+espDoorsButton.BorderSizePixel = 0
+
+local espKeyButton = Instance.new("TextButton")
+espKeyButton.Parent = MenuFrame
+espKeyButton.Text = "Esp key"
+espKeyButton.Size = UDim2.new(1, -20, 0, 50)
+espKeyButton.Position = UDim2.new(0, 10, 0, 70)
+espKeyButton.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+espKeyButton.TextColor3 = Color3.new(1, 1, 1)
+espKeyButton.BorderSizePixel = 0
+
+local espLeverButton = Instance.new("TextButton")
+espLeverButton.Parent = MenuFrame
+espLeverButton.Text = "Esp Lever"
+espLeverButton.Size = UDim2.new(1, -20, 0, 50)
+espLeverButton.Position = UDim2.new(0, 10, 0, 130)
+espLeverButton.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+espLeverButton.TextColor3 = Color3.new(1, 1, 1)
+espLeverButton.BorderSizePixel = 0
+
+-- Кнопка для увеличения скорости персонажа
+local speedButton = Instance.new("TextButton")
+speedButton.Parent = MenuFrame
+speedButton.Text = "50% Speed Boost"
+speedButton.Size = UDim2.new(1, -20, 0, 50)
+speedButton.Position = UDim2.new(0, 10, 0, 190) -- Размещена ниже остальных кнопок
+speedButton.BackgroundColor3 = Color3.new(0.3, 0.3, 0.3)
+speedButton.TextColor3 = Color3.new(1, 1, 1)
+speedButton.BorderSizePixel = 0
+
+-- Переключение видимости меню
+MenuButton.MouseButton1Click:Connect(function()
+    MenuFrame.Visible = not MenuFrame.Visible
+end)
+
+-- Функция для увеличения скорости персонажа на 50%
+local function increaseSpeed()
+    local character = game.Players.LocalPlayer.Character
+    if character and character:FindFirstChild("Humanoid") then
+        local humanoid = character.Humanoid
+        humanoid.WalkSpeed = humanoid.WalkSpeed * 1.5
+    end
+end
+
+-- Обработчик кнопки увеличения скорости
+speedButton.MouseButton1Click:Connect(function()
+    increaseSpeed()
+end)
+
+-- Функция для создания ESP для дверей
+local function createDoorESP()
+    for i = 0, 100 do
+        local door = game:GetService("Workspace"):FindFirstChild("CurrentRooms"):FindFirstChild(tostring(i))
+        if door and door:FindFirstChild("Door") then
+            local espLabel = Instance.new("BillboardGui", door.Door)
+            espLabel.Size = UDim2.new(0, 100, 0, 50)
+            espLabel.Adornee = door.Door
+            espLabel.AlwaysOnTop = true
+
+            local textLabel = Instance.new("TextLabel", espLabel)
+            textLabel.Size = UDim2.new(1, 0, 1, 0)
+            textLabel.BackgroundTransparency = 1
+            textLabel.Text = "door / " .. i
+            textLabel.TextColor3 = Color3.new(0, 1, 0)
+        end
+    end
+end
+
+-- Функция для создания ESP для ключей
+local function createKeyESP()
+    for i = 0, 100 do
+        local key = game:GetService("Workspace"):FindFirstChild("CurrentRooms"):FindFirstChild(tostring(i))
+        if key and key:FindFirstChild("Assets") and key.Assets:FindFirstChild("KeyObtain") then
+            local espLabel = Instance.new("BillboardGui", key.Assets.KeyObtain.Hitbox.KeyHitbox)
+            espLabel.Size = UDim2.new(0, 100, 0, 50)
+            espLabel.Adornee = key.Assets.KeyObtain.Hitbox.KeyHitbox
+            espLabel.AlwaysOnTop = true
+
+            local textLabel = Instance.new("TextLabel", espLabel)
+            textLabel.Size = UDim2.new(1, 0, 1, 0)
+            textLabel.BackgroundTransparency = 1
+            textLabel.Text = "key / " .. i
+            textLabel.TextColor3 = Color3.new(1, 0, 0)
+        end
+    end
+end
+
+-- Функция для создания ESP для рубильников
+local function createLeverESP()
+    for i = 0, 100 do
+        local lever = game:GetService("Workspace"):FindFirstChild("CurrentRooms"):FindFirstChild(tostring(i))
+        if lever and lever:FindFirstChild("Assets") and lever.Assets:FindFirstChild("LeverForGate") then
+            local espLabel = Instance.new("BillboardGui", lever.Assets.LeverForGate.Main)
+            espLabel.Size = UDim2.new(0, 100, 0, 50)
+            espLabel.Adornee = lever.Assets.LeverForGate.Main
+            espLabel.AlwaysOnTop = true
+
+            local textLabel = Instance.new("TextLabel", espLabel)
+            textLabel.Size = UDim2.new(1, 0, 1, 0)
+            textLabel.BackgroundTransparency = 1
+            textLabel.Text = "(Рубильник)"
+            textLabel.TextColor3 = Color3.new(1, 1, 0)
+        end
+    end
+end
+
+-- Обновление ESP для дверей, ключей и рубильников каждую секунду
+espDoorsButton.MouseButton1Click:Connect(function()
+    while true do
+        createDoorESP()
+        wait(1)
+    end
+end)
+
+espKeyButton.MouseButton1Click:Connect(function()
+    while true do
+        createKeyESP()
+        wait(1)
+    end
+end)
+
+espLeverButton.MouseButton1Click:Connect(function()
+    while true do
+        createLeverESP()
+        wait(1)
+    end
+end)
