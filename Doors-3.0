@@ -1,0 +1,185 @@
+-- Создаем экран GUI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Создаем кнопку для открытия/закрытия меню
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Size = UDim2.new(0, 100, 0, 50)
+ToggleButton.Position = UDim2.new(0, 10, 0, 10)
+ToggleButton.Text = "Toggle Menu"
+ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Черный цвет кнопки
+ToggleButton.TextColor3 = Color3.fromRGB(255, 0, 0) -- Красный текст
+ToggleButton.Parent = ScreenGui
+
+-- Создаем меню
+local MenuFrame = Instance.new("Frame")
+MenuFrame.Size = UDim2.new(0, 150, 0, 250)
+MenuFrame.Position = UDim2.new(0, 10, 0, 70)
+MenuFrame.Visible = false
+MenuFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+MenuFrame.Parent = ScreenGui
+
+-- Создаем текст с авторством
+local AuthorLabel = Instance.new("TextLabel")
+AuthorLabel.Size = UDim2.new(1, 0, 0, 20)
+AuthorLabel.Position = UDim2.new(0, 0, 0, 210)
+AuthorLabel.Text = "By Robanik"
+AuthorLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+AuthorLabel.BackgroundTransparency = 1
+AuthorLabel.Parent = MenuFrame
+
+-- Создаем кнопку ESP Players
+local ESPButton = Instance.new("TextButton")
+ESPButton.Size = UDim2.new(0, 140, 0, 30)
+ESPButton.Position = UDim2.new(0, 5, 0, 5)
+ESPButton.Text = "ESP Players"
+ESPButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ESPButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+ESPButton.Parent = MenuFrame
+
+-- Создаем кнопку ESP Doors
+local ESPDoorsButton = Instance.new("TextButton")
+ESPDoorsButton.Size = UDim2.new(0, 140, 0, 30)
+ESPDoorsButton.Position = UDim2.new(0, 5, 0, 40)
+ESPDoorsButton.Text = "ESP Doors"
+ESPDoorsButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ESPDoorsButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+ESPDoorsButton.Parent = MenuFrame
+
+-- Создаем кнопку ESP Keys
+local ESPKeysButton = Instance.new("TextButton")
+ESPKeysButton.Size = UDim2.new(0, 140, 0, 30)
+ESPKeysButton.Position = UDim2.new(0, 5, 0, 75)
+ESPKeysButton.Text = "ESP Keys"
+ESPKeysButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ESPKeysButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+ESPKeysButton.Parent = MenuFrame
+
+-- Создаем кнопку ESP Lever
+local ESPLeverButton = Instance.new("TextButton")
+ESPLeverButton.Size = UDim2.new(0, 140, 0, 30)
+ESPLeverButton.Position = UDim2.new(0, 5, 0, 110)
+ESPLeverButton.Text = "ESP Lever"
+ESPLeverButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ESPLeverButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+ESPLeverButton.Parent = MenuFrame
+
+-- Функция для открытия/закрытия меню
+local isMenuOpen = false
+ToggleButton.MouseButton1Click:Connect(function()
+    isMenuOpen = not isMenuOpen
+    MenuFrame.Visible = isMenuOpen
+end)
+
+-- Функция для ESP Doors с обновлением каждые 0.5 секунд
+local function toggleESPDoors()
+    while true do
+        for i = 0, 100 do
+            local doorPath = game:GetService("Workspace"):FindFirstChild("CurrentRooms")
+            if doorPath and doorPath:FindFirstChild(tostring(i)) and doorPath[tostring(i)]:FindFirstChild("Door") and doorPath[tostring(i)].Door:FindFirstChild("Door") then
+                local door = doorPath[tostring(i)].Door.Door
+                if not door:FindFirstChild("ESPLabel") then
+                    local billboardGui = Instance.new("BillboardGui")
+                    billboardGui.Name = "ESPLabel"
+                    billboardGui.Parent = door
+                    billboardGui.Size = UDim2.new(0, 100, 0, 50)
+                    billboardGui.AlwaysOnTop = true
+
+                    local label = Instance.new("TextLabel")
+                    label.Parent = billboardGui
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.Text = "Door / " .. i
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.fromRGB(255, 0, 0)
+                end
+            end
+        end
+        wait(0.5)
+    end
+end
+
+-- Функция для ESP Keys с обновлением каждые 0.5 секунд
+local function toggleESPKeys()
+    while true do
+        for i = 0, 100 do
+            local keyPath = game:GetService("Workspace"):FindFirstChild("CurrentRooms")
+            if keyPath and keyPath:FindFirstChild(tostring(i)) then
+                -- Проверка основного пути
+                local keyHitbox = keyPath[tostring(i)]:FindFirstChild("Assets") and keyPath[tostring(i)].Assets:FindFirstChild("KeyObtain") and keyPath[tostring(i)].Assets.KeyObtain:FindFirstChild("Hitbox") and keyPath[tostring(i)].Assets.KeyObtain.Hitbox:FindFirstChild("KeyHitbox")
+                -- Проверка альтернативного пути
+                local altKeyHitbox = keyPath[tostring(i)]:FindFirstChild("Assets") and keyPath[tostring(i)].Assets:FindFirstChild("Alternate") and keyPath[tostring(i)].Assets.Alternate:FindFirstChild("Keys") and keyPath[tostring(i)].Assets.Alternate.Keys:FindFirstChild("1") and keyPath[tostring(i)].Assets.Alternate.Keys["1"]:FindFirstChild("KeyObtain") and keyPath[tostring(i)].Assets.Alternate.Keys["1"].KeyObtain:FindFirstChild("Hitbox") and keyPath[tostring(i)].Assets.Alternate.Keys["1"].KeyObtain.Hitbox:FindFirstChild("KeyHitbox")
+
+                if keyHitbox and not keyHitbox:FindFirstChild("ESPLabel") then
+                    local billboardGui = Instance.new("BillboardGui")
+                    billboardGui.Name = "ESPLabel"
+                    billboardGui.Parent = keyHitbox
+                    billboardGui.Size = UDim2.new(0, 100, 0, 50)
+                    billboardGui.AlwaysOnTop = true
+
+                    local label = Instance.new("TextLabel")
+                    label.Parent = billboardGui
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.Text = "Key / " .. i
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.fromRGB(255, 0, 0)
+                end
+
+                if altKeyHitbox and not altKeyHitbox:FindFirstChild("ESPLabel") then
+                    local billboardGui = Instance.new("BillboardGui")
+                    billboardGui.Name = "ESPLabel"
+                    billboardGui.Parent = altKeyHitbox
+                    billboardGui.Size = UDim2.new(0, 100, 0, 50)
+                    billboardGui.AlwaysOnTop = true
+
+                    local label = Instance.new("TextLabel")
+                    label.Parent = billboardGui
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.Text = "Key / " .. i
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.fromRGB(255, 0, 0)
+                end
+            end
+        end
+        wait(0.5)
+    end
+end
+
+-- Функция для ESP Lever с обновлением каждые 0.5 секунд
+local function toggleESPLever()
+    while true do
+        for i = 0, 100 do
+            local leverPath = game:GetService("Workspace"):FindFirstChild("CurrentRooms")
+            if leverPath and leverPath:FindFirstChild(tostring(i)) and leverPath[tostring(i)]:FindFirstChild("Assets") and leverPath[tostring(i)].Assets:FindFirstChild("LeverForGate") and leverPath[tostring(i)].Assets.LeverForGate:FindFirstChild("Main") then
+                local lever = leverPath[tostring(i)].Assets.LeverForGate.Main
+                if not lever:FindFirstChild("ESPLabel") then
+                    local billboardGui = Instance.new("BillboardGui")
+                    billboardGui.Name = "ESPLabel"
+                    billboardGui.Parent = lever
+                    billboardGui.Size = UDim2.new(0, 100, 0, 50)
+                    billboardGui.AlwaysOnTop = true
+
+                    local label = Instance.new("TextLabel")
+                    label.Parent = billboardGui
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.Text = "Lever / " .. i
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.fromRGB(255, 0, 0)
+                end
+            end
+        end
+        wait(0.5)
+    end
+end
+
+-- Функции для кнопок
+ESPDoorsButton.MouseButton1Click:Connect(function()
+    toggleESPDoors()
+end)
+
+ESPKeysButton.MouseButton1Click:Connect(function()
+    toggleESPKeys()
+end)
+
+ESPLeverButton.MouseButton1Click:Connect(function()
+    toggleESPLever()
+end)
