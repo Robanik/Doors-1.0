@@ -1,0 +1,215 @@
+-- Создаем экран GUI
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Создаем кнопку для открытия/закрытия меню
+local ToggleButton = Instance.new("TextButton")
+ToggleButton.Size = UDim2.new(0, 150, 0, 50)
+ToggleButton.Position = UDim2.new(0, 10, 0, 10)
+ToggleButton.Text = "Toggle Menu"
+ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Черный цвет кнопки
+ToggleButton.TextColor3 = Color3.fromRGB(255, 0, 0) -- Красный текст
+ToggleButton.TextSize = 18
+ToggleButton.Font = Enum.Font.GothamBold
+ToggleButton.Parent = ScreenGui
+
+-- Создаем меню
+local MenuFrame = Instance.new("Frame")
+MenuFrame.Size = UDim2.new(0, 180, 0, 300)
+MenuFrame.Position = UDim2.new(0, 10, 0, 70)
+MenuFrame.Visible = false
+MenuFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40) -- Темный фон
+MenuFrame.BorderSizePixel = 5
+MenuFrame.BorderColor3 = Color3.fromRGB(255, 0, 0) -- Красная рамка
+MenuFrame.Parent = ScreenGui
+
+-- Добавляем тень для меню
+local shadow = Instance.new("ImageLabel")
+shadow.Size = UDim2.new(1, 0, 1, 0)
+shadow.Position = UDim2.new(0, 5, 0, 5)
+shadow.BackgroundTransparency = 1
+shadow.Image = "rbxassetid://4635137839"  -- Стиль тени
+shadow.Parent = MenuFrame
+
+-- Создаем текст с авторством
+local AuthorLabel = Instance.new("TextLabel")
+AuthorLabel.Size = UDim2.new(1, 0, 0, 20)
+AuthorLabel.Position = UDim2.new(0, 0, 1, -25)
+AuthorLabel.Text = "By Robanik"
+AuthorLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+AuthorLabel.TextSize = 14
+AuthorLabel.TextStrokeTransparency = 0.8
+AuthorLabel.BackgroundTransparency = 1
+AuthorLabel.Font = Enum.Font.Gotham
+AuthorLabel.Parent = MenuFrame
+
+-- Кнопки для ESP
+local ESPButtons = {}
+
+local function createESPButton(text, position, callback)
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0, 140, 0, 30)
+    button.Position = position
+    button.Text = text
+    button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    button.TextColor3 = Color3.fromRGB(255, 0, 0)
+    button.TextSize = 16
+    button.Font = Enum.Font.Gotham
+    button.BorderSizePixel = 1
+    button.BorderColor3 = Color3.fromRGB(255, 0, 0)
+    button.Parent = MenuFrame
+    button.MouseButton1Click:Connect(callback)
+    table.insert(ESPButtons, button)
+end
+
+-- Функции ESP
+local espThreads = {}
+
+local function stopESPThreads()
+    for _, thread in ipairs(espThreads) do
+        if thread then
+            thread:Disconnect()
+        end
+    end
+    espThreads = {}
+end
+
+local function toggleESPDoors()
+    stopESPThreads()
+    local thread = game:GetService("RunService").Heartbeat:Connect(function()
+        for i = 0, 100 do
+            local doorPath = game:GetService("Workspace"):FindFirstChild("CurrentRooms")
+            if doorPath and doorPath:FindFirstChild(tostring(i)) and doorPath[tostring(i)]:FindFirstChild("Door") then
+                local door = doorPath[tostring(i)].Door
+                if not door:FindFirstChild("ESPLabel") then
+                    local billboardGui = Instance.new("BillboardGui")
+                    billboardGui.Name = "ESPLabel"
+                    billboardGui.Parent = door
+                    billboardGui.Size = UDim2.new(0, 100, 0, 50)
+                    billboardGui.AlwaysOnTop = true
+
+                    local label = Instance.new("TextLabel")
+                    label.Parent = billboardGui
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.Text = "Door / " .. i
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.fromRGB(255, 0, 0)
+                    label.TextSize = 14
+                    label.TextStrokeTransparency = 0.8
+                    label.Font = Enum.Font.Gotham
+                end
+            end
+        end
+    end)
+    table.insert(espThreads, thread)
+end
+
+local function toggleESPKeys()
+    stopESPThreads()
+    local thread = game:GetService("RunService").Heartbeat:Connect(function()
+        for i = 0, 100 do
+            local keyPath = game:GetService("Workspace"):FindFirstChild("CurrentRooms")
+            if keyPath and keyPath:FindFirstChild(tostring(i)) then
+                local keyHitbox = keyPath[tostring(i)]:FindFirstChild("Assets") and keyPath[tostring(i)].Assets:FindFirstChild("KeyObtain") and keyPath[tostring(i)].Assets.KeyObtain:FindFirstChild("Hitbox") and keyPath[tostring(i)].Assets.KeyObtain.Hitbox:FindFirstChild("KeyHitbox")
+                if keyHitbox and not keyHitbox:FindFirstChild("ESPLabel") then
+                    local billboardGui = Instance.new("BillboardGui")
+                    billboardGui.Name = "ESPLabel"
+                    billboardGui.Parent = keyHitbox
+                    billboardGui.Size = UDim2.new(0, 100, 0, 50)
+                    billboardGui.AlwaysOnTop = true
+
+                    local label = Instance.new("TextLabel")
+                    label.Parent = billboardGui
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.Text = "Key / " .. i
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.fromRGB(255, 0, 0)
+                    label.TextSize = 14
+                    label.TextStrokeTransparency = 0.8
+                    label.Font = Enum.Font.Gotham
+                end
+            end
+        end
+    end)
+    table.insert(espThreads, thread)
+end
+
+local function toggleESPLever()
+    stopESPThreads()
+    local thread = game:GetService("RunService").Heartbeat:Connect(function()
+        for i = 0, 100 do
+            local leverPath = game:GetService("Workspace"):FindFirstChild("CurrentRooms")
+            if leverPath and leverPath:FindFirstChild(tostring(i)) and leverPath[tostring(i)]:FindFirstChild("Assets") and leverPath[tostring(i)].Assets:FindFirstChild("LeverForGate") then
+                local lever = leverPath[tostring(i)].Assets.LeverForGate.Main
+                if not lever:FindFirstChild("ESPLabel") then
+                    local billboardGui = Instance.new("BillboardGui")
+                    billboardGui.Name = "ESPLabel"
+                    billboardGui.Parent = lever
+                    billboardGui.Size = UDim2.new(0, 100, 0, 50)
+                    billboardGui.AlwaysOnTop = true
+
+                    local label = Instance.new("TextLabel")
+                    label.Parent = billboardGui
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.Text = "Lever / " .. i
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.fromRGB(255, 0, 0)
+                    label.TextSize = 14
+                    label.TextStrokeTransparency = 0.8
+                    label.Font = Enum.Font.Gotham
+                end
+            end
+        end
+    end)
+    table.insert(espThreads, thread)
+end
+
+local function toggleESPPlayers()
+    stopESPThreads()
+    local thread = game:GetService("RunService").Heartbeat:Connect(function()
+        for _, player in ipairs(game.Players:GetPlayers()) do
+            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                local humanoidRootPart = player.Character.HumanoidRootPart
+                if not humanoidRootPart:FindFirstChild("ESPLabel") then
+                    local billboardGui = Instance.new("BillboardGui")
+                    billboardGui.Name = "ESPLabel"
+                    billboardGui.Parent = humanoidRootPart
+                    billboardGui.Size = UDim2.new(0, 100, 0, 50)
+                    billboardGui.AlwaysOnTop = true
+
+                    local label = Instance.new("TextLabel")
+                    label.Parent = billboardGui
+                    label.Size = UDim2.new(1, 0, 1, 0)
+                    label.Text = player.Name
+                    label.BackgroundTransparency = 1
+                    label.TextColor3 = Color3.fromRGB(0, 255, 0)
+                    label.TextSize = 14
+                    label.TextStrokeTransparency = 0.8
+                    label.Font = Enum.Font.Gotham
+                end
+            end
+        end
+    end)
+    table.insert(espThreads, thread)
+end
+
+-- Создаем кнопки для включения ESP
+createESPButton("Toggle ESP Doors", UDim2.new(0, 10, 0, 60), toggleESPDoors)
+createESPButton("Toggle ESP Keys", UDim2.new(0, 10, 0, 100), toggleESPKeys)
+createESPButton("Toggle ESP Lever", UDim2.new(0, 10, 0, 140), toggleESPLever)
+createESPButton("Toggle ESP Players", UDim2.new(0, 10, 0, 180), toggleESPPlayers)
+
+-- Функция для переключения видимости меню
+ToggleButton.MouseButton1Click:Connect(function()
+    MenuFrame.Visible = not MenuFrame.Visible
+end)
+
+-- Функция для закрытия меню при клике вне его
+game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
+    if not gameProcessed and input.UserInputType == Enum.UserInputType.MouseButton1 then
+        if not MenuFrame.Visible then return end
+        if not MenuFrame:IsPointInRegion2D(input.Position) and not ToggleButton:IsPointInRegion2D(input.Position) then
+            MenuFrame.Visible = false
+        end
+    end
+end)
